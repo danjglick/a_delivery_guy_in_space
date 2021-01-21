@@ -15,9 +15,9 @@ let planets = []
 let asteroids = []
 let xPositionProtagonist;
 let yPositionProtagonist;
-const MILLISECONDS_PER_FRAME = 1
-const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 1
-const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 1
+const MILLISECONDS_PER_FRAME = 100
+const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
+const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 const PLANET_IMAGES = ["mars.png", "moon.png", "rainbow_planet.png", "sunset_planet.png", "golden_planet.png"]
 const ASTEROID_IMAGES = ["asteroid_a.png", "asteroid_b.png"]
 
