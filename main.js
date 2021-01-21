@@ -2,7 +2,8 @@
 // implement game mechanics
 // implement levels
 // implement sounds
-// implement global high score
+// implement global high scores list that displays after you beat a level
+// make a black hole in each planet that fills when protagonist reaches the planet
 // polish
 // port to ios
 // release
@@ -94,8 +95,8 @@ function initializeAsteroid() {
 
 function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height)
-    drawPlanets()
     drawProtagonist()
+    drawPlanets()
     drawAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
