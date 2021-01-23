@@ -1,13 +1,7 @@
 let canvas;
-const CANVAS_WIDTH_BUFFER = 10
-const CANVAS_HEIGHT_BUFFER = 20
 let context;
-const MILLISECONDS_PER_FRAME = 100
 let level = 1
 let planets = []
-const PLANET_IMAGES = ["mars.png", "moon.png", "rainbow_planet.png", "sunset_planet.png", "golden_planet.png"]
-const MIN_PLANET_LENGTH = 100
-const MAX_PLANET_LENGTH = 300
 let protagonist = {
     "image_src": "images/spaceship.png",
     "element": null,
@@ -16,11 +10,17 @@ let protagonist = {
     "width": 60,
     "height": 45
 }
-const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 let asteroids = []
+const CANVAS_WIDTH_BUFFER = 10
+const CANVAS_HEIGHT_BUFFER = 20
+const MILLISECONDS_PER_FRAME = 100
+const PLANET_IMAGES = ["mars.png", "moon.png", "rainbow_planet.png", "sunset_planet.png", "golden_planet.png"]
 const ASTEROID_IMAGES = ["asteroid_a.png", "asteroid_b.png"]
+const MIN_PLANET_LENGTH = 100
+const MAX_PLANET_LENGTH = 300
 const MIN_ASTEROID_LENGTH = 15
 const MAX_ASTEROID_LENGTH = 75
+const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
 
 function initializeGame() {
@@ -86,7 +86,7 @@ function gameLoop() {
     drawProtagonist()
     drawPlanets()
     asteroids.push(initializeAsteroid())
-    drawAsteroids()
+    // drawAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
 }
