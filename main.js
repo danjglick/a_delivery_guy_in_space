@@ -63,13 +63,13 @@ function initializePlanets() {
         }
         let element = document.createElement("IMG")
         element.src = imageSrc
-        let length = Math.floor(Math.random() * (MAX_PLANET_LENGTH - MIN_PLANET_LENGTH)) + MIN_PLANET_LENGTH
+        let diameter = Math.floor(Math.random() * (MAX_PLANET_LENGTH - MIN_PLANET_LENGTH)) + MIN_PLANET_LENGTH
         planets.push({
             "imageSrc": imageSrc,
             "element": element,
             "xPosition": xPosition,
             "yPosition": yPosition,
-            "length": length
+            "diameter": diameter
         })
     }
 }
@@ -115,7 +115,7 @@ function moveProtagonist(event) {
 function drawPlanets() {
     for (let i = 0; i < planets.length; i++) {
         let planet = planets[i]
-        context.drawImage(planet["element"], planet["xPosition"], planet["yPosition"], planet["length"], planet["length"])
+        context.drawImage(planet["element"], planet["xPosition"], planet["yPosition"], planet["diameter"], planet["diameter"])
     }
 }
 
@@ -128,14 +128,14 @@ function initializeAsteroid() {
         if (xPosition === 0 || xPosition === canvas.width || yPosition === 0 || yPosition === canvas.height) {
             let possibleDirections = ["northeast", "southeast", "southwest", "northwest"]
             let direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
-            let length = Math.floor(Math.random() * (MAX_ASTEROID_LENGTH - MIN_ASTEROID_LENGTH)) + MIN_ASTEROID_LENGTH
+            let diameter = Math.floor(Math.random() * (MAX_ASTEROID_LENGTH - MIN_ASTEROID_LENGTH)) + MIN_ASTEROID_LENGTH
             let randomAsteroidImage = ASTEROID_IMAGES[Math.floor(Math.random() * ASTEROID_IMAGES.length)]
             let imageSrc = `images/${randomAsteroidImage}`
             return {
                 "xPosition": xPosition,
                 "yPosition": yPosition,
                 "direction": direction,
-                "length": length,
+                "diameter": diameter,
                 "imageSrc": imageSrc
             }
         }
@@ -145,32 +145,32 @@ function initializeAsteroid() {
 function drawAsteroids() {
     let newAsteroid = initializeAsteroid()
     asteroids.push(newAsteroid)
-    for (let asteroidCount = 0; asteroidCount < asteroids.length; asteroidCount++) {
-        let asteroid = asteroids[asteroidCount]
+    for (let i = 0; i < asteroids.length; i++) {
+        let asteroid = asteroids[i]
         moveAsteroid(asteroid)
         let asteroidElement = document.createElement("IMG")
-        asteroidElement.src = asteroids[asteroidCount]["imageSrc"]
-        context.drawImage(asteroidElement, asteroid["xPosition"], asteroid["yPosition"], asteroid["length"], asteroid["length"])
+        asteroidElement.src = asteroid["imageSrc"]
+        context.drawImage(asteroidElement, asteroid["xPosition"], asteroid["yPosition"], asteroid["diameter"], asteroid["diameter"])
     }
 }
 
 function moveAsteroid(asteroid) {
     switch(asteroid.direction) {
         case "northeast":
-            asteroid.xPosition += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
-            asteroid.yPosition -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["xPosition"] += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["yPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
             break
         case "southeast":
-            asteroid.xPosition += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
-            asteroid.yPosition += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["xPosition"] += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["yPosition"] += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
             break
         case "southwest":
-            asteroid.xPosition -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
-            asteroid.yPosition += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["xPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["yPosition"] += PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
             break
         case "northwest":
-            asteroid.xPosition -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
-            asteroid.yPosition -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["xPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
+            asteroid["yPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
     }
 }
 
