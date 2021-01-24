@@ -117,7 +117,6 @@ function initializeAsteroid() {
 }
 
 function gameLoop() {
-    context.clearRect(0, 0, canvas.width, canvas.height)
     context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
     drawPlanets()
     asteroids.push(initializeAsteroid())
@@ -129,6 +128,7 @@ function gameLoop() {
         explodeProtagonist()
     }
     setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
+    context.clearRect(0, 0, canvas.width, canvas.height)
 }
 
 function drawPlanets() {
