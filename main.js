@@ -1,4 +1,6 @@
 const MILLISECONDS_PER_FRAME = 100
+const PIXELS_BUFFER = 20
+const MILLISECONDS_BUFFER = 1000
 const EARTH_IMAGE = "images/earth.png"
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const MIN_PLANET_LENGTH = 100
@@ -15,8 +17,7 @@ const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
 const EXPLOSION_DIAMETER = 300
-const PIXELS_BUFFER = 20
-const MILLISECONDS_BUFFER = 1000
+const FRAMES_PER_EXPLOSION = 2
 
 let canvas;
 let context;
@@ -32,6 +33,11 @@ let protagonist = {
 }
 let asteroids = []
 let visitedPlaces = []
+let explosion = {
+    "xPosition": 0,
+    "yPosition": 0,
+    "framesLeft": 0
+}
 
 function initializeGame() {
     canvas = document.getElementsByTagName("canvas")[0]
@@ -129,6 +135,10 @@ function gameLoop() {
         cheerProtagonist()
     } else if (isProtagonistInAsteroid()) {
         explodeProtagonist()
+    }
+    if (explosion["framesLeft"] > 0) {
+        explodeProtagonist()
+        explosion["framesLeft"]--
     }
     setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
 }
@@ -247,6 +257,9 @@ function isProtagonistInAsteroid() {
         let isProtagonistHorizontallyAlignedWithAsteroid = (xPositionsCoveredByProtagonist.filter(xPositionCoveredByProtagonist => xPositionsCoveredByAsteroid.includes(xPositionCoveredByProtagonist)).length > 0)
         let isProtagonistVerticallyAlignedWithAsteroid = (yPositionsCoveredByProtagonist.filter(yPositionCoveredByProtagonist => yPositionsCoveredByAsteroid.includes(yPositionCoveredByProtagonist)).length > 0)
         if (isProtagonistHorizontallyAlignedWithAsteroid && isProtagonistVerticallyAlignedWithAsteroid) {
+            explosion["xPosition"] = protagonist["xPosition"]
+            explosion["yPosition"] = protagonist["yPosition"]
+            explosion["framesLeft"] = FRAMES_PER_EXPLOSION
             return true
         }
     }
@@ -280,7 +293,7 @@ function cheerProtagonist() {
 function explodeProtagonist() {
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
-    context.drawImage(explosionElement, (protagonist["xPosition"] - protagonist["width"] + PIXELS_BUFFER), (protagonist["yPosition"] - protagonist["height"] + PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
+    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] + PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] + PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     visitedPlaces = []
     initializeProtagonist()
 }
