@@ -16,7 +16,7 @@ const CROWD_IMAGE = "images/crowd.png"
 const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
-const EXPLOSION_DIAMETER = 300
+const EXPLOSION_DIAMETER = 200
 const FRAMES_PER_EXPLOSION = 2
 
 let canvas;
