@@ -14,8 +14,9 @@ const CROWD_IMAGE = "images/crowd.png"
 const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
-const EXPLOSION_DIAMETER = 150
+const EXPLOSION_DIAMETER = 300
 const PIXELS_BUFFER = 20
+const MILLISECONDS_BUFFER = 1000
 
 let canvas;
 let context;
@@ -30,7 +31,7 @@ let protagonist = {
     "height": PROTAGONIST_HEIGHT
 }
 let asteroids = []
-let visitedPlanets = []
+let visitedPlaces = []
 
 function initializeGame() {
     canvas = document.getElementsByTagName("canvas")[0]
@@ -121,6 +122,7 @@ function gameLoop() {
     context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
     drawPlanets()
     asteroids.push(initializeAsteroid())
+    asteroids = asteroids.filter(asteroid => asteroid["xPosition"] >= 0 && asteroid["xPosition"] <= canvas.width && asteroid["yPosition"] >= 0 && asteroid["yPosition"] <= canvas.height)
     drawAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     if (isProtagonistInPlanet()) {
@@ -139,8 +141,6 @@ function drawPlanets() {
 }
 
 function drawAsteroids() {
-    let newAsteroid = initializeAsteroid()
-    asteroids.push(newAsteroid)
     for (let i = 0; i < asteroids.length; i++) {
         let asteroid = asteroids[i]
         moveAsteroid(asteroid)
@@ -187,15 +187,25 @@ function moveAsteroid(asteroid) {
     }
 }
 
-function isProtagonistInPlanet() {
+function getXPositionsCoveredByProtagonist() {
     let xPositionsCoveredByProtagonist = []
     for (let i = protagonist["xPosition"]; i < protagonist["xPosition"] + protagonist["width"]; i++) {
         xPositionsCoveredByProtagonist.push(i)
     }
+    return xPositionsCoveredByProtagonist
+}
+
+function getYPositionsCoveredByProtagonist() {
     let yPositionsCoveredByProtagonist = []
     for (let i = protagonist["yPosition"]; i < protagonist["yPosition"] + protagonist["height"]; i++) {
         yPositionsCoveredByProtagonist.push(i)
     }
+    return yPositionsCoveredByProtagonist
+}
+
+function isProtagonistInPlanet() {
+    let xPositionsCoveredByProtagonist = getXPositionsCoveredByProtagonist()
+    let yPositionsCoveredByProtagonist = getYPositionsCoveredByProtagonist()
     for (let i = 0; i < planets.length; i++) {
         let planet = planets[i]
         let xPositionsCoveredByPlanet = []
@@ -209,22 +219,21 @@ function isProtagonistInPlanet() {
         let isProtagonistHorizontallyAlignedWithPlanet = (xPositionsCoveredByProtagonist.filter(xPositionCoveredByProtagonist => xPositionsCoveredByPlanet.includes(xPositionCoveredByProtagonist)).length > 0)
         let isProtagonistVerticallyAlignedWithPlanet = (yPositionsCoveredByProtagonist.filter(yPositionCoveredByProtagonist => yPositionsCoveredByPlanet.includes(yPositionCoveredByProtagonist)).length > 0)
         if (isProtagonistHorizontallyAlignedWithPlanet && isProtagonistVerticallyAlignedWithPlanet) {
-            visitedPlanets.push(planet)
+            if (visitedPlaces[visitedPlaces.length - 1] !== planet) {
+                visitedPlaces.push(planet)
+            }
             return true
         }
+    }
+    if (visitedPlaces[visitedPlaces.length - 1] !== "space") {
+        visitedPlaces.push("space")
     }
     return false
 }
 
 function isProtagonistInAsteroid() {
-    let xPositionsCoveredByProtagonist = []
-    for (let i = protagonist["xPosition"]; i < (protagonist["xPosition"]) + protagonist["width"]; i++) {
-        xPositionsCoveredByProtagonist.push(i)
-    }
-    let yPositionsCoveredByProtagonist = []
-    for (let i = protagonist["yPosition"]; i < protagonist["yPosition"] + protagonist["height"]; i++) {
-        yPositionsCoveredByProtagonist.push(i)
-    }
+    let xPositionsCoveredByProtagonist = getXPositionsCoveredByProtagonist()
+    let yPositionsCoveredByProtagonist = getYPositionsCoveredByProtagonist()
     for (let i = 0; i < asteroids.length; i++) {
         let asteroid = asteroids[i]
         let xPositionsCoveredByAsteroid = []
@@ -245,15 +254,26 @@ function isProtagonistInAsteroid() {
 }
 
 function cheerProtagonist() {
-    let currentPlanet = visitedPlanets[visitedPlanets.length - 1]
-    if (currentPlanet["image"] !== EARTH_IMAGE) {
+    let currentPlanet = visitedPlaces[visitedPlaces.length - 1]
+    let isFirstVisitToCurrentPlanet = visitedPlaces.indexOf(currentPlanet) === visitedPlaces.lastIndexOf(currentPlanet)
+    if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
         let alienElement = document.createElement("IMG")
         alienElement.src = "images/alien_a.png"
         context.drawImage(alienElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-    } else if ([...new Set(visitedPlanets)].length === planets.length) {
-        let familyElement = document.createElement("IMG")
-        familyElement.src = "images/crowd.png"
-        context.drawImage(familyElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        setTimeout(function() {visitedPlaces.push("space")}, MILLISECONDS_BUFFER)
+    }
+    let visitedPlanets = []
+    for (let i = 0; i < visitedPlaces.length; i++) {
+        let visitedPlace = visitedPlaces[i]
+        if (visitedPlace !== "space" && !visitedPlanets.includes(visitedPlace)) {
+            visitedPlanets.push(visitedPlace)
+        }
+    }
+    if (currentPlanet["image"] === EARTH_IMAGE && visitedPlanets.length === planets.length) {
+        let crowdElement = document.createElement("IMG")
+        crowdElement.src = "images/crowd.png"
+        context.drawImage(crowdElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        setTimeout(function() {visitedPlaces = []}, MILLISECONDS_BUFFER)
     }
 }
 
@@ -261,7 +281,7 @@ function explodeProtagonist() {
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
     context.drawImage(explosionElement, (protagonist["xPosition"] - protagonist["width"] + PIXELS_BUFFER), (protagonist["yPosition"] - protagonist["height"] + PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
-    visitedPlanets = []
+    visitedPlaces = []
     initializeProtagonist()
 }
 
