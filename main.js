@@ -1,6 +1,6 @@
 const MILLISECONDS_PER_FRAME = 100
-const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const EARTH_IMAGE = "images/earth.png"
+const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const MIN_PLANET_LENGTH = 100
 const MAX_PLANET_LENGTH = 300
 const PROTAGONIST_WIDTH = 60
@@ -15,9 +15,7 @@ const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
 const EXPLOSION_DIAMETER = 150
-const COLLISION_BUFFER = 20
-const CANVAS_WIDTH_BUFFER = 10
-const CANVAS_HEIGHT_BUFFER = 20
+const PIXELS_BUFFER = 20
 
 let canvas;
 let context;
@@ -36,8 +34,8 @@ let visitedPlanets = []
 
 function initializeGame() {
     canvas = document.getElementsByTagName("canvas")[0]
-    canvas.width = window.innerWidth - CANVAS_WIDTH_BUFFER
-    canvas.height = window.innerHeight - CANVAS_HEIGHT_BUFFER
+    canvas.width = window.innerWidth - PIXELS_BUFFER
+    canvas.height = window.innerHeight - PIXELS_PIXELS_BUFFER
     context = canvas.getContext("2d")
     initializeLevel()
     gameLoop()
@@ -262,7 +260,7 @@ function cheerProtagonist() {
 function explodeProtagonist() {
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
-    context.drawImage(explosionElement, (protagonist["xPosition"] - protagonist["width"] + COLLISION_BUFFER), (protagonist["yPosition"] - protagonist["height"] + COLLISION_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
+    context.drawImage(explosionElement, (protagonist["xPosition"] - protagonist["width"] + PIXELS_BUFFER), (protagonist["yPosition"] - protagonist["height"] + PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     visitedPlanets = []
     initializeProtagonist()
 }
