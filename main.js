@@ -35,7 +35,7 @@ let visitedPlanets = []
 function initializeGame() {
     canvas = document.getElementsByTagName("canvas")[0]
     canvas.width = window.innerWidth - PIXELS_BUFFER
-    canvas.height = window.innerHeight - PIXELS_PIXELS_BUFFER
+    canvas.height = window.innerHeight - PIXELS_BUFFER
     context = canvas.getContext("2d")
     initializeLevel()
     gameLoop()
