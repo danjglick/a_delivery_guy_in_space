@@ -3,14 +3,14 @@ const PIXELS_BUFFER = 20
 const MILLISECONDS_BUFFER = 1000
 const EARTH_IMAGE = "images/earth.png"
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
-const MIN_PLANET_LENGTH = 100
-const MAX_PLANET_LENGTH = 300
+const MIN_PLANET_DIAMETER = 100
+const MAX_PLANET_DIAMETER = 300
 const PROTAGONIST_WIDTH = 60
 const PROTAGONIST_HEIGHT = 45
 const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
-const MIN_ASTEROID_LENGTH = 15
-const MAX_ASTEROID_LENGTH = 75
+const MIN_ASTEROID_DIAMETER = 15
+const MAX_ASTEROID_DIAMETER = 75
 const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
 const CROWD_IMAGE = "images/crowd.png"
 const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
@@ -83,7 +83,7 @@ function initializePlanets() {
         }
         let element = document.createElement("IMG")
         element.src = image
-        let diameter = Math.floor(Math.random() * (MAX_PLANET_LENGTH - MIN_PLANET_LENGTH)) + MIN_PLANET_LENGTH
+        let diameter = Math.floor(Math.random() * (MAX_PLANET_DIAMETER - MIN_PLANET_DIAMETER)) + MIN_PLANET_DIAMETER
         planets.push({
             "image": image,
             "element": element,
@@ -110,7 +110,7 @@ function initializeAsteroid() {
         if (xPosition === 0 || xPosition === canvas.width || yPosition === 0 || yPosition === canvas.height) {
             let possibleDirections = ["northeast", "southeast", "southwest", "northwest"]
             let direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
-            let diameter = Math.floor(Math.random() * (MAX_ASTEROID_LENGTH - MIN_ASTEROID_LENGTH)) + MIN_ASTEROID_LENGTH
+            let diameter = Math.floor(Math.random() * (MAX_ASTEROID_DIAMETER - MIN_ASTEROID_DIAMETER)) + MIN_ASTEROID_DIAMETER
             let image = ASTEROID_IMAGES[Math.floor(Math.random() * ASTEROID_IMAGES.length)]
             return {
                 "image": image,
