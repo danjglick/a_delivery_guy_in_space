@@ -1,21 +1,23 @@
-const CANVAS_WIDTH_BUFFER = 10
-const CANVAS_HEIGHT_BUFFER = 20
 const MILLISECONDS_PER_FRAME = 100
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const EARTH_IMAGE = "images/earth.png"
-const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
 const MIN_PLANET_LENGTH = 100
 const MAX_PLANET_LENGTH = 300
+const PROTAGONIST_WIDTH = 60
+const PROTAGONIST_HEIGHT = 45
+const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
+const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
 const MIN_ASTEROID_LENGTH = 15
 const MAX_ASTEROID_LENGTH = 75
-const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
-const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CROWD_IMAGE = "images/crowd.png"
+const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
 const CHEERER_DIAMETER = 100
-const COLLISION_BUFFER = 20
 const EXPLOSION_IMAGE = "images/explosion.png"
 const EXPLOSION_DIAMETER = 150
+const COLLISION_BUFFER = 20
+const CANVAS_WIDTH_BUFFER = 10
+const CANVAS_HEIGHT_BUFFER = 20
 
 let canvas;
 let context;
@@ -26,8 +28,8 @@ let protagonist = {
     "element": null,
     "xPosition": 0,
     "yPosition": 0,
-    "width": 60,
-    "height": 45
+    "width": PROTAGONIST_WIDTH,
+    "height": PROTAGONIST_HEIGHT
 }
 let asteroids = []
 let visitedPlanets = []
@@ -118,7 +120,7 @@ function initializeAsteroid() {
 
 function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height)
-    drawProtagonist()
+    context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
     drawPlanets()
     asteroids.push(initializeAsteroid())
     drawAsteroids()
@@ -129,10 +131,6 @@ function gameLoop() {
         explodeProtagonist()
     }
     setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
-}
-
-function drawProtagonist() {
-    context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
 }
 
 function drawPlanets() {
@@ -265,6 +263,7 @@ function explodeProtagonist() {
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
     context.drawImage(explosionElement, (protagonist["xPosition"] - protagonist["width"] + COLLISION_BUFFER), (protagonist["yPosition"] - protagonist["height"] + COLLISION_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
+    visitedPlanets = []
     initializeProtagonist()
 }
 
