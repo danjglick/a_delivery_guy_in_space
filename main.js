@@ -127,8 +127,6 @@ function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
     drawPlanets()
-    asteroids.push(initializeAsteroid())
-    asteroids = asteroids.filter(asteroid => asteroid["xPosition"] >= 0 && asteroid["xPosition"] <= canvas.width && asteroid["yPosition"] >= 0 && asteroid["yPosition"] <= canvas.height)
     drawAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     if (isProtagonistInPlanet()) {
@@ -151,6 +149,7 @@ function drawPlanets() {
 }
 
 function drawAsteroids() {
+    asteroids.push(initializeAsteroid())
     for (let i = 0; i < asteroids.length; i++) {
         let asteroid = asteroids[i]
         moveAsteroid(asteroid)
@@ -195,6 +194,7 @@ function moveAsteroid(asteroid) {
             asteroid["xPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
             asteroid["yPosition"] -= PIXELS_ASTEROIDS_TRAVEL_PER_FRAME
     }
+    asteroids = asteroids.filter(asteroid => asteroid["xPosition"] >= 0 && asteroid["xPosition"] <= canvas.width && asteroid["yPosition"] >= 0 && asteroid["yPosition"] <= canvas.height)
 }
 
 function getXPositionsCoveredByProtagonist() {
