@@ -71,15 +71,15 @@ function initializePlanets() {
             try_again = false
             xPosition = Math.floor(Math.random() * canvas.width)
             yPosition = Math.floor(Math.random() * canvas.height)
-            // if (planets.length > 0) {
-            //     for (let i = 0; i < planets.length; i++) {
-            //         let isEnoughWidthBetweenPlanets = Math.abs(xPosition - planets[i]["xPosition"]) > 300
-            //         let isEnoughHeightBetweenPlanets = Math.abs(yPosition - planets[i]["yPosition"]) > 150
-            //         if (!isEnoughWidthBetweenPlanets || !isEnoughHeightBetweenPlanets) {
-            //             try_again = true
-            //         }
-            //     }
-            // }
+            if (planets.length > 0) {
+                for (let i = 0; i < planets.length; i++) {
+                    let isEnoughWidthBetweenPlanets = Math.abs(xPosition - planets[i]["xPosition"]) > 300
+                    let isEnoughHeightBetweenPlanets = Math.abs(yPosition - planets[i]["yPosition"]) > 150
+                    if (!isEnoughWidthBetweenPlanets || !isEnoughHeightBetweenPlanets) {
+                        try_again = true
+                    }
+                }
+            }
         }
         let element = document.createElement("IMG")
         element.src = image
