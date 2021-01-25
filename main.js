@@ -12,8 +12,8 @@ const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
 const MIN_ASTEROID_DIAMETER = 15
 const MAX_ASTEROID_DIAMETER = 75
 const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
-const CROWD_IMAGE = "images/crowd.png"
 const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
+const CROWD_IMAGE = "images/crowd.png"
 const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
 const EXPLOSION_DIAMETER = 200
@@ -71,15 +71,15 @@ function initializePlanets() {
             try_again = false
             xPosition = Math.floor(Math.random() * canvas.width)
             yPosition = Math.floor(Math.random() * canvas.height)
-            if (planets.length > 0) {
-                for (let i = 0; i < planets.length; i++) {
-                    let isEnoughWidthBetweenPlanets = Math.abs(xPosition - planets[i]["xPosition"]) > 300
-                    let isEnoughHeightBetweenPlanets = Math.abs(yPosition - planets[i]["yPosition"]) > 150
-                    if (!isEnoughWidthBetweenPlanets || !isEnoughHeightBetweenPlanets) {
-                        try_again = true
-                    }
-                }
-            }
+            // if (planets.length > 0) {
+            //     for (let i = 0; i < planets.length; i++) {
+            //         let isEnoughWidthBetweenPlanets = Math.abs(xPosition - planets[i]["xPosition"]) > 300
+            //         let isEnoughHeightBetweenPlanets = Math.abs(yPosition - planets[i]["yPosition"]) > 150
+            //         if (!isEnoughWidthBetweenPlanets || !isEnoughHeightBetweenPlanets) {
+            //             try_again = true
+            //         }
+            //     }
+            // }
         }
         let element = document.createElement("IMG")
         element.src = image
