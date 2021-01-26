@@ -1,6 +1,6 @@
 const MILLISECONDS_PER_FRAME = 100
 const PIXELS_BUFFER = 20
-const MILLISECONDS_BUFFER = 1000
+const MILLISECONDS_BUFFER = 250
 const EARTH_IMAGE = "images/earth.png"
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const MIN_PLANET_DIAMETER = 100
@@ -127,7 +127,7 @@ function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.drawImage(protagonist["element"], protagonist["xPosition"], protagonist["yPosition"], protagonist["width"], protagonist["height"])
     drawPlanets()
-    drawAsteroids()
+    // drawAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     if (isProtagonistInPlanet()) {
         cheerProtagonist()
@@ -270,10 +270,11 @@ function cheerProtagonist() {
     let currentPlanet = visitedPlaces[visitedPlaces.length - 1]
     let isFirstVisitToCurrentPlanet = visitedPlaces.indexOf(currentPlanet) === visitedPlaces.lastIndexOf(currentPlanet)
     if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
+        setTimeout(function() {document.getElementById("smallCheerSound").play()}, MILLISECONDS_BUFFER)
         let alienElement = document.createElement("IMG")
         alienElement.src = "images/alien_a.png"
         context.drawImage(alienElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() {visitedPlaces.push("space")}, MILLISECONDS_BUFFER)
+        setTimeout(function() {visitedPlaces.push("space")}, MILLISECONDS_BUFFER * 5)
     }
     let visitedPlanets = []
     for (let i = 0; i < visitedPlaces.length; i++) {
@@ -283,18 +284,22 @@ function cheerProtagonist() {
         }
     }
     if (currentPlanet["image"] === EARTH_IMAGE && visitedPlanets.length === planets.length) {
+        setTimeout(function() {document.getElementById("smallCheerSound").play()}, MILLISECONDS_BUFFER)
+        setTimeout(function() {document.getElementById("bigCheerSound").play()}, MILLISECONDS_BUFFER)
         let crowdElement = document.createElement("IMG")
-        crowdElement.src = "images/crowd.png"
+        crowdElement.src = CROWD_IMAGE
         context.drawImage(crowdElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() {visitedPlaces = []}, MILLISECONDS_BUFFER)
+        setTimeout(function() {visitedPlaces = []}, MILLISECONDS_BUFFER * 20)
     }
 }
 
 function explodeProtagonist() {
+    document.getElementById("explosionSound").play()
+    setTimeout(function() {document.getElementById("booSound").play()}, MILLISECONDS_BUFFER * 2)
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
-    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] + PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] + PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
+    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     visitedPlaces = []
-    initializeProtagonist()
+    setTimeout(function() {initializeProtagonist()}, MILLISECONDS_BUFFER)
 }
 
