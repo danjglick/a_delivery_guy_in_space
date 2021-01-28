@@ -33,7 +33,7 @@ let protagonist = {
     "height": PROTAGONIST_HEIGHT
 }
 let asteroids = []
-let milliseconds_between_asteroid_initializations = MILLISECONDS_PER_FRAME
+let millisecondsBetweenAsteroidInitializations = MILLISECONDS_PER_FRAME
 let visitedPlaces = []
 let explosion = {
     "xPosition": 0,
@@ -119,7 +119,7 @@ function initializeAsteroids() {
             "diameter": diameter
         })
     }
-    setTimeout(initializeAsteroids, milliseconds_between_asteroid_initializations)
+    setTimeout(initializeAsteroids, millisecondsBetweenAsteroidInitializations)
 }
 
 function initializeExplosion() {
