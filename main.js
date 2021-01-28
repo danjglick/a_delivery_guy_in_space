@@ -280,11 +280,11 @@ function cheerProtagonist() {
     let currentPlanet = visitedPlaces[visitedPlaces.length - 1]
     let isFirstVisitToCurrentPlanet = visitedPlaces.indexOf(currentPlanet) === visitedPlaces.lastIndexOf(currentPlanet)
     if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
-        setTimeout(function() {document.getElementById("smallCheerSound").play()}, MILLISECONDS_BUFFER)
+        setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
         let alienElement = document.createElement("IMG")
         alienElement.src = "images/alien_a.png"
         context.drawImage(alienElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() {visitedPlaces.push("space")}, MILLISECONDS_BUFFER * 5)
+        setTimeout(function() { visitedPlaces.push("space") }, MILLISECONDS_BUFFER * 5)
     }
     let visitedPlanets = []
     for (let i = 0; i < visitedPlaces.length; i++) {
@@ -294,22 +294,22 @@ function cheerProtagonist() {
         }
     }
     if (currentPlanet["image"] === EARTH_IMAGE && visitedPlanets.length === planets.length) {
-        setTimeout(function() {document.getElementById("smallCheerSound").play()}, MILLISECONDS_BUFFER)
-        setTimeout(function() {document.getElementById("bigCheerSound").play()}, MILLISECONDS_BUFFER)
+        setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+        setTimeout(function() { document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
         let crowdElement = document.createElement("IMG")
         crowdElement.src = CROWD_IMAGE
         context.drawImage(crowdElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() {visitedPlaces = []}, MILLISECONDS_BUFFER * 20)
+        setTimeout(function() { visitedPlaces = [] }, MILLISECONDS_BUFFER * 20)
     }
 }
 
 function explodeProtagonist() {
     document.getElementById("explosionSound").play()
-    setTimeout(function() {document.getElementById("booSound").play()}, MILLISECONDS_BUFFER * 2)
+    setTimeout(function() { document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
     context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     visitedPlaces = []
-    setTimeout(function() {initializeProtagonist()}, MILLISECONDS_BUFFER)
+    setTimeout(function() { initializeProtagonist() }, MILLISECONDS_BUFFER)
 }
 
