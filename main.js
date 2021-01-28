@@ -1,14 +1,14 @@
 const MILLISECONDS_PER_FRAME = 100
-const PIXELS_BUFFER = 20
 const MILLISECONDS_BUFFER = 250
-const PROTAGONIST_IMAGE = "images/spaceship.png"
-const PROTAGONIST_WIDTH = 60
-const PROTAGONIST_HEIGHT = 45
-const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
+const PIXELS_BUFFER = 20
 const EARTH_IMAGE = "images/earth.png"
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const MIN_PLANET_DIAMETER = 100
 const MAX_PLANET_DIAMETER = 300
+const PROTAGONIST_IMAGE = "images/spaceship.png"
+const PROTAGONIST_WIDTH = 60
+const PROTAGONIST_HEIGHT = 45
+const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
 const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
 const MIN_ASTEROID_DIAMETER = 15
 const MAX_ASTEROID_DIAMETER = 75
@@ -23,6 +23,7 @@ const FRAMES_PER_EXPLOSION = 2
 let canvas;
 let context;
 let level = 1
+let planets = []
 let protagonist = {
     "image": PROTAGONIST_IMAGE,
     "element": null,
@@ -31,8 +32,8 @@ let protagonist = {
     "width": PROTAGONIST_WIDTH,
     "height": PROTAGONIST_HEIGHT
 }
-let planets = []
 let asteroids = []
+let milliseconds_between_asteroid_initializations = MILLISECONDS_PER_FRAME
 let visitedPlaces = []
 let explosion = {
     "xPosition": 0,
@@ -47,15 +48,9 @@ function initializeGame() {
     context = canvas.getContext("2d")
     initializePlanets()
     initializeProtagonist()
+    initializeAsteroids()
     document.addEventListener('keydown', moveProtagonist)
     gameLoop()
-}
-
-function initializeProtagonist() {
-    protagonist["element"] = document.createElement("IMG")
-    protagonist["element"].src = PROTAGONIST_IMAGE
-    protagonist["xPosition"] = planets[0]["xPosition"]
-    protagonist["yPosition"] = planets[0]["yPosition"]
 }
 
 function initializePlanets() {
@@ -99,26 +94,32 @@ function initializePlanets() {
     }
 }
 
-function initializeAsteroid() {
-    while (true) {
-        let possibleXPositions = [0, canvas.width, Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.width)]
-        let xPosition = possibleXPositions[Math.floor(Math.random() * possibleXPositions.length)]
-        let possibleYPositions = [0, canvas.height, Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * canvas.height)]
-        let yPosition = possibleYPositions[Math.floor(Math.random() * possibleYPositions.length)]
-        if (xPosition === 0 || xPosition === canvas.width || yPosition === 0 || yPosition === canvas.height) {
-            let possibleDirections = ["northeast", "southeast", "southwest", "northwest"]
-            let direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
-            let diameter = Math.floor(Math.random() * (MAX_ASTEROID_DIAMETER - MIN_ASTEROID_DIAMETER)) + MIN_ASTEROID_DIAMETER
-            let image = ASTEROID_IMAGES[Math.floor(Math.random() * ASTEROID_IMAGES.length)]
-            return {
-                "image": image,
-                "xPosition": xPosition,
-                "yPosition": yPosition,
-                "direction": direction,
-                "diameter": diameter
-            }
-        }
+function initializeProtagonist() {
+    protagonist["element"] = document.createElement("IMG")
+    protagonist["element"].src = PROTAGONIST_IMAGE
+    protagonist["xPosition"] = planets[0]["xPosition"]
+    protagonist["yPosition"] = planets[0]["yPosition"]
+}
+
+function initializeAsteroids() {
+    let possibleXPositions = [0, canvas.width, Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.width)]
+    let xPosition = possibleXPositions[Math.floor(Math.random() * possibleXPositions.length)]
+    let possibleYPositions = [0, canvas.height, Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * canvas.height)]
+    let yPosition = possibleYPositions[Math.floor(Math.random() * possibleYPositions.length)]
+    if (xPosition === 0 || xPosition === canvas.width || yPosition === 0 || yPosition === canvas.height) {
+        let possibleDirections = ["northeast", "southeast", "southwest", "northwest"]
+        let direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
+        let diameter = Math.floor(Math.random() * (MAX_ASTEROID_DIAMETER - MIN_ASTEROID_DIAMETER)) + MIN_ASTEROID_DIAMETER
+        let image = ASTEROID_IMAGES[Math.floor(Math.random() * ASTEROID_IMAGES.length)]
+        asteroids.push({
+            "image": image,
+            "xPosition": xPosition,
+            "yPosition": yPosition,
+            "direction": direction,
+            "diameter": diameter
+        })
     }
+    setTimeout(initializeAsteroids, milliseconds_between_asteroid_initializations)
 }
 
 function initializeExplosion() {
@@ -131,11 +132,10 @@ function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height)
     drawProtagonist()
     drawPlanets()
-    asteroids.push(initializeAsteroid())
     for (let i = 0; i < asteroids.length; i++) {
         let asteroid = asteroids[i]
-        moveAsteroid(asteroid)
         drawAsteroid(asteroid)
+        moveAsteroid(asteroid)
     }
     if (isProtagonistInPlanet()) {
         cheerProtagonist()
