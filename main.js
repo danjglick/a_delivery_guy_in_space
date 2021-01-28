@@ -5,6 +5,7 @@ const EARTH_IMAGE = "images/earth.png"
 const PLANET_IMAGES = ["images/mars.png", "images/moon.png", "images/rainbow_planet.png", "images/sunset_planet.png", "images/golden_planet.png"]
 const MIN_PLANET_DIAMETER = 100
 const MAX_PLANET_DIAMETER = 300
+const PROTAGONIST_IMAGE = "images/spaceship.png"
 const PROTAGONIST_WIDTH = 60
 const PROTAGONIST_HEIGHT = 45
 const PIXELS_PROTAGONIST_TRAVELS_PER_CLICK = 50
@@ -24,7 +25,7 @@ let context;
 let level = 1
 let planets = []
 let protagonist = {
-    "image": "images/spaceship.png",
+    "image": PROTAGONIST_IMAGE,
     "element": null,
     "xPosition": 0,
     "yPosition": 0,
@@ -96,7 +97,7 @@ function initializePlanets() {
 
 function initializeProtagonist() {
     protagonist["element"] = document.createElement("IMG")
-    protagonist["element"].src = protagonist["image"]
+    protagonist["element"].src = PROTAGONIST_IMAGE
     protagonist["xPosition"] = planets[0]["xPosition"]
     protagonist["yPosition"] = planets[0]["yPosition"]
 }
