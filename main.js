@@ -267,9 +267,6 @@ function isProtagonistInAsteroid() {
         let isProtagonistHorizontallyAlignedWithAsteroid = (xPositionsCoveredByProtagonist.filter(xPositionCoveredByProtagonist => xPositionsCoveredByAsteroid.includes(xPositionCoveredByProtagonist)).length > 0)
         let isProtagonistVerticallyAlignedWithAsteroid = (yPositionsCoveredByProtagonist.filter(yPositionCoveredByProtagonist => yPositionsCoveredByAsteroid.includes(yPositionCoveredByProtagonist)).length > 0)
         if (isProtagonistHorizontallyAlignedWithAsteroid && isProtagonistVerticallyAlignedWithAsteroid) {
-            explosion["xPosition"] = protagonist["xPosition"]
-            explosion["yPosition"] = protagonist["yPosition"]
-            explosion["framesLeft"] = FRAMES_PER_EXPLOSION
             return true
         }
     }
