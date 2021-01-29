@@ -44,7 +44,7 @@ let explosion = {
 function initializeGame() {
     canvas = document.getElementById("gameCanvas")
     canvas.width = window.innerWidth - PIXELS_BUFFER
-    canvas.height = window.innerHeight - PIXELS_BUFFER
+    canvas.height = window.innerHeight - (PIXELS_BUFFER * 4)
     context = canvas.getContext("2d")
     initializePlanets()
     initializeProtagonist()
@@ -54,16 +54,24 @@ function initializeGame() {
 }
 
 function initializePlanets() {
-    let images = PLANET_IMAGES
+    let planetImages = PLANET_IMAGES
+    let alienImages = ALIEN_IMAGES
     for (let planetCount = 1; planetCount <= level + 2; planetCount++) {
         let image = ""
+        let cheerer = ""
         if (planetCount === 1) {
             image = EARTH_IMAGE
+            cheerer = CROWD_IMAGE
         } else {
-            let indexOfImage = Math.floor(Math.random() * images.length)
-            image = images[indexOfImage]
-            images.splice(indexOfImage, 1)
+            let indexOfPlanetImage = Math.floor(Math.random() * planetImages.length)
+            image = planetImages[indexOfPlanetImage]
+            planetImages.splice(indexOfPlanetImage, 1)
+            let indexOfAlienImage = Math.floor(Math.random() * alienImages.length)
+            cheerer = alienImages[indexOfAlienImage]
+            alienImages.splice(indexOfAlienImage, 1)
         }
+        let element = document.createElement("IMG")
+        element.src = image
         let xPosition;
         let yPosition;
         let try_again = true
@@ -81,15 +89,14 @@ function initializePlanets() {
             //     }
             // }
         }
-        let element = document.createElement("IMG")
-        element.src = image
         let diameter = Math.floor(Math.random() * (MAX_PLANET_DIAMETER - MIN_PLANET_DIAMETER)) + MIN_PLANET_DIAMETER
         planets.push({
             "image": image,
             "element": element,
             "xPosition": xPosition,
             "yPosition": yPosition,
-            "diameter": diameter
+            "diameter": diameter,
+            "cheerer": cheerer,
         })
     }
 }
@@ -275,12 +282,12 @@ function isProtagonistInAsteroid() {
 
 function cheerProtagonist() {
     let currentPlanet = visitedPlaces[visitedPlaces.length - 1]
+    let cheererElement = document.createElement("IMG")
+    cheererElement.src = currentPlanet["cheerer"]
     let isFirstVisitToCurrentPlanet = visitedPlaces.indexOf(currentPlanet) === visitedPlaces.lastIndexOf(currentPlanet)
     if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
         setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
-        let alienElement = document.createElement("IMG")
-        alienElement.src = "images/alien_a.png"
-        context.drawImage(alienElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        context.drawImage(cheererElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
         setTimeout(function() { visitedPlaces.push("space") }, MILLISECONDS_BUFFER * 5)
     }
     let visitedPlanets = []
@@ -293,9 +300,7 @@ function cheerProtagonist() {
     if (currentPlanet["image"] === EARTH_IMAGE && visitedPlanets.length === planets.length) {
         setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
         setTimeout(function() { document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
-        let crowdElement = document.createElement("IMG")
-        crowdElement.src = CROWD_IMAGE
-        context.drawImage(crowdElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        context.drawImage(cheererElement, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
         setTimeout(function() { visitedPlaces = [] }, MILLISECONDS_BUFFER * 20)
     }
 }
