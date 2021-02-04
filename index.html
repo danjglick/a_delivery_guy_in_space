@@ -5,34 +5,6 @@
         <script src="main.js"></script>
     </head>
     <body onload="initializeGame()">
-        <h1 id="instructionsHeader" onClick="toggleInstructions()">
-            Instructions &#9660;
-        </h1>
-        <h2 id="instructionsBody" hidden>
-            Thanks for checking out my (half-done) video-game! <br/> <br/>
-            You're goal is to reach all the planets and then return safely to Earth. <br/>
-            Use the arrow keys to move. <br/> <br/>
-
-            Before playing, make sure that you see three planets, and that each planet has at least a few inches of space between it and the other planets. If this isn't the case, simply refresh the page. <br/> <br/>
-
-            I'm adding features every day! <br/>
-            - Recently added features: sound, multiple aliens <br/>
-            - Upcoming features: planets that always locate themselves correctly, levels, global high scores, ability to play via smartphone <br/> <br/>
-
-            (Click the triangle above to close these instructions and start playing!)
-
-
-        </h2>
-        <script>
-            function toggleInstructions() {
-                document.getElementById("instructionsBody").hidden = !document.getElementById("instructionsBody").hidden
-                if (document.getElementById("instructionsBody").hidden === true) {
-                    document.getElementById("instructionsHeader").innerHTML = "Instructions &#9660;"
-                } else {
-                    document.getElementById("instructionsHeader").innerHTML = "Instructions &#9650;"
-                }
-            }
-        </script>
         <canvas id="gameCanvas"></canvas>
         <audio id="smallCheerSound" src="sounds/small_cheer.wav"></audio>
         <audio id="bigCheerSound" src="sounds/big_cheer.m4a"></audio>
