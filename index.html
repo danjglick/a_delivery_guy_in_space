@@ -1,14 +1,26 @@
-<html>
+<html lang=>
     <head>
         <title>a delivery guy in space</title>
         <link rel="stylesheet" href="main.css">
         <script src="main.js"></script>
     </head>
-    <body onload="initializeGame()">
-        <canvas id="gameCanvas"></canvas>
-        <audio id="smallCheerSound" src="sounds/small_cheer.wav"></audio>
-        <audio id="bigCheerSound" src="sounds/big_cheer.m4a"></audio>
-        <audio id="explosionSound" src="sounds/explosion.mp3"></audio>
-        <audio id="booSound" src="sounds/boo.mp3"></audio>
+    <body>
+        <div id="menu">
+            <div id="logo">
+                a delivery guy in space
+            </div>
+            <button id="playLevelButton" onClick="initializeLevel()">
+                Play level
+                <span id="level">
+                    1
+                </span> </button>
+        </div>
+        <div id="game" hidden>
+            <canvas id="canvas"></canvas>
+            <audio id="smallCheerSound" src="sounds/small_cheer.wav"></audio>
+            <audio id="bigCheerSound" src="sounds/big_cheer.m4a"></audio>
+            <audio id="explosionSound" src="sounds/explosion.mp3"></audio>
+            <audio id="booSound" src="sounds/boo.mp3"></audio>
+        </div>
     </body>
 </html>

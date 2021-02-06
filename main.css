@@ -1,8 +1,17 @@
 * {
     background: black;
     color: white;
+    font-size: 1.2em;
 }
 
-#instructionsBody {
-    /*font-size: 30px;*/
+#logo {
+    float: left;
+}
+
+#playLevelButton {
+    float: right;
+}
+
+#playLevelButton, #level {
+    background: green;
 }

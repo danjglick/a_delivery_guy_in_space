@@ -13,12 +13,12 @@ const ASTEROID_IMAGES = ["images/asteroid_a.png", "images/asteroid_b.png"]
 const MIN_ASTEROID_DIAMETER = 15
 const MAX_ASTEROID_DIAMETER = 75
 const PIXELS_ASTEROIDS_TRAVEL_PER_FRAME = 20
-const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
-const CROWD_IMAGE = "images/crowd.png"
-const CHEERER_DIAMETER = 100
 const EXPLOSION_IMAGE = "images/explosion.png"
 const EXPLOSION_DIAMETER = 200
 const FRAMES_PER_EXPLOSION = 2
+const ALIEN_IMAGES = ["images/alien_a.png", "images/alien_b.png"]
+const CROWD_IMAGE = "images/crowd.png"
+const CHEERER_DIAMETER = 100
 
 let canvas;
 let context;
@@ -34,42 +34,45 @@ let protagonist = {
 }
 let asteroids = []
 let millisecondsBetweenAsteroidInitializations = MILLISECONDS_PER_FRAME
-let visitedPlaces = []
+let placesVisited = []
 let explosion = {
     "xPosition": 0,
     "yPosition": 0,
     "framesLeft": 0
 }
+let hasClosedLevel = false
 
-function initializeGame() {
-    canvas = document.getElementById("gameCanvas")
+function initializeLevel() {
+    hasClosedLevel = false
+    document.getElementById("menu").hidden = true
+    document.getElementById("game").hidden = false
+    canvas = document.getElementById("canvas")
     canvas.width = window.innerWidth - PIXELS_BUFFER
-    canvas.height = window.innerHeight - (PIXELS_BUFFER)
+    canvas.height = window.innerHeight - PIXELS_BUFFER
     context = canvas.getContext("2d")
     initializePlanets()
     initializeProtagonist()
     initializeAsteroids()
-    document.addEventListener('keydown', moveProtagonist)
     gameLoop()
 }
 
 function initializePlanets() {
     let planetImages = PLANET_IMAGES
     let alienImages = ALIEN_IMAGES
-    for (let planetCount = 1; planetCount <= level + 2; planetCount++) {
+    for (let i = 0; i < level + 1; i++) {
         let element = document.createElement("IMG")
         let image = ""
         let cheerer = ""
-        if (planetCount === 1) {
+        if (i === 0) {
             image = EARTH_IMAGE
             cheerer = CROWD_IMAGE
         } else {
             let indexOfPlanetImage = Math.floor(Math.random() * planetImages.length)
             image = planetImages[indexOfPlanetImage]
-            planetImages.splice(indexOfPlanetImage, 1)
+            // planetImages.splice(indexOfPlanetImage, 1)
             let indexOfAlienImage = Math.floor(Math.random() * alienImages.length)
             cheerer = alienImages[indexOfAlienImage]
-            alienImages.splice(indexOfAlienImage, 1)
+            // alienImages.splice(indexOfAlienImage, 1)
         }
         element.src = image
         let xPosition;
@@ -103,9 +106,10 @@ function initializePlanets() {
 
 function initializeProtagonist() {
     protagonist["element"] = document.createElement("IMG")
-    protagonist["element"].src = PROTAGONIST_IMAGE
+    protagonist["element"].src = protagonist["image"]
     protagonist["xPosition"] = planets[0]["xPosition"]
     protagonist["yPosition"] = planets[0]["yPosition"]
+    document.onkeydown = moveProtagonist
 }
 
 function initializeAsteroids() {
@@ -140,9 +144,8 @@ function gameLoop() {
     drawProtagonist()
     drawPlanets()
     for (let i = 0; i < asteroids.length; i++) {
-        let asteroid = asteroids[i]
-        drawAsteroid(asteroid)
-        moveAsteroid(asteroid)
+        drawAsteroid(asteroids[i])
+        moveAsteroid(asteroids[i])
     }
     if (isProtagonistInPlanet()) {
         cheerProtagonist()
@@ -154,7 +157,9 @@ function gameLoop() {
         explodeProtagonist()
         explosion["framesLeft"]--
     }
-    setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
+    if (document.getElementById("menu").hidden) {
+        setTimeout(gameLoop, MILLISECONDS_PER_FRAME)
+    }
 }
 
 function drawProtagonist() {
@@ -246,14 +251,14 @@ function isProtagonistInPlanet() {
         let isProtagonistHorizontallyAlignedWithPlanet = (xPositionsCoveredByProtagonist.filter(xPositionCoveredByProtagonist => xPositionsCoveredByPlanet.includes(xPositionCoveredByProtagonist)).length > 0)
         let isProtagonistVerticallyAlignedWithPlanet = (yPositionsCoveredByProtagonist.filter(yPositionCoveredByProtagonist => yPositionsCoveredByPlanet.includes(yPositionCoveredByProtagonist)).length > 0)
         if (isProtagonistHorizontallyAlignedWithPlanet && isProtagonistVerticallyAlignedWithPlanet) {
-            if (visitedPlaces[visitedPlaces.length - 1] !== planet) {
-                visitedPlaces.push(planet)
+            if (placesVisited[placesVisited.length - 1] !== planet) {
+                placesVisited.push(planet)
             }
             return true
         }
     }
-    if (visitedPlaces[visitedPlaces.length - 1] !== "space") {
-        visitedPlaces.push("space")
+    if (placesVisited[placesVisited.length - 1] !== "space") {
+        placesVisited.push("space")
     }
     return false
 }
@@ -280,38 +285,50 @@ function isProtagonistInAsteroid() {
     return false
 }
 
-function cheerProtagonist() {
-    let currentPlanet = visitedPlaces[visitedPlaces.length - 1]
-    let cheererImage = document.createElement("IMG")
-    cheererImage.src = currentPlanet["cheerer"]
-    let isFirstVisitToCurrentPlanet = visitedPlaces.indexOf(currentPlanet) === visitedPlaces.lastIndexOf(currentPlanet)
-    if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
-        setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
-        context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() { visitedPlaces.push("space") }, MILLISECONDS_BUFFER * 5)
-    }
-    let visitedPlanets = []
-    for (let i = 0; i < visitedPlaces.length; i++) {
-        let visitedPlace = visitedPlaces[i]
-        if (visitedPlace !== "space" && !visitedPlanets.includes(visitedPlace)) {
-            visitedPlanets.push(visitedPlace)
-        }
-    }
-    if (currentPlanet["image"] === EARTH_IMAGE && visitedPlanets.length === planets.length) {
-        setTimeout(function() { document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
-        setTimeout(function() { document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
-        context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
-        setTimeout(function() { visitedPlaces = [] }, MILLISECONDS_BUFFER * 20)
-    }
-}
-
 function explodeProtagonist() {
     document.getElementById("explosionSound").play()
     setTimeout(function() { document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
     context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
-    visitedPlaces = []
-    setTimeout(function() { initializeProtagonist() }, MILLISECONDS_BUFFER)
+    placesVisited = []
+    setTimeout(initializeProtagonist, MILLISECONDS_BUFFER)
+}
+
+function cheerProtagonist() {
+    let currentPlanet = placesVisited[placesVisited.length - 1]
+    let cheererImage = document.createElement("IMG")
+    cheererImage.src = currentPlanet["cheerer"]
+    let isFirstVisitToCurrentPlanet = placesVisited.indexOf(currentPlanet) === placesVisited.lastIndexOf(currentPlanet)
+    if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
+        setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+        context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        setTimeout(function(){ placesVisited.push("space") }, MILLISECONDS_BUFFER * 5)
+    }
+    let planetsVisited = []
+    for (let i = 0; i < placesVisited.length; i++) {
+        if (placesVisited[i] !== "space" && !planetsVisited.includes(placesVisited[i])) {
+            planetsVisited.push(placesVisited[i])
+        }
+    }
+    if (currentPlanet["image"] === EARTH_IMAGE && planetsVisited.length === planets.length) {
+        setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+        setTimeout(function(){ document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
+        context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        setTimeout(closeLevel, MILLISECONDS_BUFFER * 5)
+    }
+}
+
+function closeLevel() {
+    if (!hasClosedLevel) {
+        hasClosedLevel = true
+        placesVisited = []
+        planets = []
+        asteroids = []
+        level++
+        document.getElementById("level").innerHTML = String(level)
+        document.getElementById("game").hidden = true
+        setTimeout(function(){ document.getElementById("menu").hidden = false }, MILLISECONDS_BUFFER * 3)
+    }
 }
 
