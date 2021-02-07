@@ -41,6 +41,13 @@ let explosion = {
     "framesLeft": 0
 }
 let hasClosedLevel = false
+let isSoundOn = false
+
+function toggleSound() {
+    isSoundOn = !isSoundOn
+    document.getElementById("soundOffImage").hidden = !document.getElementById("soundOffImage").hidden
+    document.getElementById("soundOnImage").hidden = !document.getElementById("soundOnImage").hidden
+}
 
 function initializeLevel() {
     hasClosedLevel = false
@@ -285,23 +292,13 @@ function isProtagonistInAsteroid() {
     return false
 }
 
-function explodeProtagonist() {
-    document.getElementById("explosionSound").play()
-    setTimeout(function() { document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
-    let explosionElement = document.createElement("IMG")
-    explosionElement.src = EXPLOSION_IMAGE
-    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
-    placesVisited = []
-    setTimeout(initializeProtagonist, MILLISECONDS_BUFFER)
-}
-
 function cheerProtagonist() {
     let currentPlanet = placesVisited[placesVisited.length - 1]
     let cheererImage = document.createElement("IMG")
     cheererImage.src = currentPlanet["cheerer"]
     let isFirstVisitToCurrentPlanet = placesVisited.indexOf(currentPlanet) === placesVisited.lastIndexOf(currentPlanet)
     if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
-        setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+        if (isSoundOn) setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
         context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
         setTimeout(function(){ placesVisited.push("space") }, MILLISECONDS_BUFFER * 5)
     }
@@ -312,11 +309,21 @@ function cheerProtagonist() {
         }
     }
     if (currentPlanet["image"] === EARTH_IMAGE && planetsVisited.length === planets.length) {
-        setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
-        setTimeout(function(){ document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
+        if (isSoundOn) setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+        if (isSoundOn) setTimeout(function(){ document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
         context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
         setTimeout(closeLevel, MILLISECONDS_BUFFER * 5)
     }
+}
+
+function explodeProtagonist() {
+    document.getElementById("explosionSound").play()
+    if (isSoundOn) setTimeout(function(){ document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
+    let explosionElement = document.createElement("IMG")
+    explosionElement.src = EXPLOSION_IMAGE
+    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
+    placesVisited = []
+    setTimeout(initializeProtagonist, MILLISECONDS_BUFFER)
 }
 
 function closeLevel() {

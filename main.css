@@ -15,3 +15,9 @@
 #playLevelButton, #level {
     background: green;
 }
+
+#soundOffImage, #soundOnImage {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
