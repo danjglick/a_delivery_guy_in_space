@@ -317,8 +317,10 @@ function cheerProtagonist() {
 }
 
 function explodeProtagonist() {
-    document.getElementById("explosionSound").play()
-    if (isSoundOn) setTimeout(function(){ document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
+    if (isSoundOn) {
+        document.getElementById("explosionSound").play()
+        setTimeout(function(){ document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
+    }
     let explosionElement = document.createElement("IMG")
     explosionElement.src = EXPLOSION_IMAGE
     context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
