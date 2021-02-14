@@ -43,20 +43,14 @@ let explosion = {
 let hasClosedLevel = false
 let isSoundOn = false
 
-function toggleSound() {
-    isSoundOn = !isSoundOn
-    document.getElementById("soundOffImage").hidden = !document.getElementById("soundOffImage").hidden
-    document.getElementById("soundOnImage").hidden = !document.getElementById("soundOnImage").hidden
-}
-
 function initializeLevel() {
-    hasClosedLevel = false
     document.getElementById("menu").hidden = true
     document.getElementById("game").hidden = false
     canvas = document.getElementById("canvas")
     canvas.width = window.innerWidth - PIXELS_BUFFER
     canvas.height = window.innerHeight - PIXELS_BUFFER
     context = canvas.getContext("2d")
+    hasClosedLevel = false
     initializePlanets()
     initializeProtagonist()
     initializeAsteroids()
@@ -298,8 +292,8 @@ function cheerProtagonist() {
     cheererImage.src = currentPlanet["cheerer"]
     let isFirstVisitToCurrentPlanet = placesVisited.indexOf(currentPlanet) === placesVisited.lastIndexOf(currentPlanet)
     if (currentPlanet["image"] !== EARTH_IMAGE && isFirstVisitToCurrentPlanet) {
-        if (isSoundOn) setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
         context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        if (isSoundOn) setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
         setTimeout(function(){ placesVisited.push("space") }, MILLISECONDS_BUFFER * 5)
     }
     let planetsVisited = []
@@ -309,35 +303,43 @@ function cheerProtagonist() {
         }
     }
     if (currentPlanet["image"] === EARTH_IMAGE && planetsVisited.length === planets.length) {
-        if (isSoundOn) setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
-        if (isSoundOn) setTimeout(function(){ document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
         context.drawImage(cheererImage, currentPlanet["xPosition"], currentPlanet["yPosition"], CHEERER_DIAMETER, CHEERER_DIAMETER)
+        if (isSoundOn) {
+            setTimeout(function(){ document.getElementById("smallCheerSound").play() }, MILLISECONDS_BUFFER)
+            setTimeout(function(){ document.getElementById("bigCheerSound").play() }, MILLISECONDS_BUFFER)
+        }
         setTimeout(closeLevel, MILLISECONDS_BUFFER * 5)
     }
 }
 
 function explodeProtagonist() {
+    let explosionElement = document.createElement("IMG")
+    explosionElement.src = EXPLOSION_IMAGE
+    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     if (isSoundOn) {
         document.getElementById("explosionSound").play()
         setTimeout(function(){ document.getElementById("booSound").play() }, MILLISECONDS_BUFFER * 2)
     }
-    let explosionElement = document.createElement("IMG")
-    explosionElement.src = EXPLOSION_IMAGE
-    context.drawImage(explosionElement, (explosion["xPosition"] - protagonist["width"] - PIXELS_BUFFER), (explosion["yPosition"] - protagonist["height"] - PIXELS_BUFFER), EXPLOSION_DIAMETER, EXPLOSION_DIAMETER)
     placesVisited = []
     setTimeout(initializeProtagonist, MILLISECONDS_BUFFER)
 }
 
 function closeLevel() {
     if (!hasClosedLevel) {
-        hasClosedLevel = true
         placesVisited = []
         planets = []
         asteroids = []
+        hasClosedLevel = true
         level++
         document.getElementById("level").innerHTML = String(level)
         document.getElementById("game").hidden = true
         setTimeout(function(){ document.getElementById("menu").hidden = false }, MILLISECONDS_BUFFER * 3)
     }
+}
+
+function toggleSound() {
+    isSoundOn = !isSoundOn
+    document.getElementById("soundOffImage").hidden = !document.getElementById("soundOffImage").hidden
+    document.getElementById("soundOnImage").hidden = !document.getElementById("soundOnImage").hidden
 }
 
